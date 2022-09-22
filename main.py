@@ -1,22 +1,32 @@
 import telebot
-from buttons import main_buttons
+from buttons import *
+import re
+from config import TOKEN
+from db_connect import *
 
-bot = telebot.TeleBot('5718439558:AAGfQ8DjTt3-3UIk3rW24DDNw7WUie7T_wY')
+
+bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id, 'Привет', reply_markup=main_buttons())
-    print('ok')
+    bot.send_message(message.chat.id, 'Привет. Поделитесь номером телефона?', reply_markup=reg_buttons())
 
-@bot.message_handler()
-def user_commands(message):
-    if message.text == "Ввести часы":
-        bot.send_message(message.chat.id, 'Ввести часы')
-    elif message.text == "Посмотреть часы":
-        bot.send_message(message.chat.id, 'Глянуть')
-    elif message.text == "Регистрация":
-        bot.send_message(message.chat.id, 'Глянуфыть')
-    elif message.text == "Помощь":
-        bot.send_message(message.chat.id, 'ыф')
+@bot.message_handler(content_types="contact")
+def contact(message):
+    phone = "".join(symbol for symbol in re.findall("\d+", message.contact.phone_number))
+
+    # bot.send_message(message.chat.id, write_member(phone, message.chat.id, message.chat.last_name,
+    #                  message.chat.first_name, message.chat.username), reply_markup=button_for_order_coupons())
+
+# @bot.message_handler()
+# def user_commands(message):
+#     if message.text == "Ввести часы":
+#         bot.send_message(message.chat.id, 'Ввести часы')
+#     elif message.text == "Посмотреть часы":
+#         bot.send_message(message.chat.id, 'Глянуть')
+#     elif message.text == "Регистрация":
+#         bot.send_message(message.chat.id, 'Глянуфыть')
+#     elif message.text == "Помощь":
+#         bot.send_message(message.chat.id, 'ыф')
 
 bot.polling(none_stop=True)

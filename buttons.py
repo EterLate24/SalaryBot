@@ -9,3 +9,10 @@ def main_buttons():
     app_key = types.KeyboardButton(text="Помощь")
     keyboard.add(cards_key, app_key)
     return keyboard
+
+def reg_buttons():
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    agree_key = types.KeyboardButton(text="Да", request_contact=True)
+    disagree_key = types.KeyboardButton(text="Нет")
+    keyboard.add(agree_key, disagree_key)
+    return keyboard
