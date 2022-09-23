@@ -3,20 +3,28 @@ from buttons import *
 import re
 from config import TOKEN
 from db_connect import *
-
+from sql_requests import *
 
 bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id, 'Привет. Поделитесь номером телефона?', reply_markup=reg_buttons())
+    bot.send_message(message.chat.id, 'Для создания учетной записи нужен ваш номер телефона, вы согласны?', reply_markup=reg_buttons())
 
 @bot.message_handler(content_types="contact")
 def contact(message):
     phone = "".join(symbol for symbol in re.findall("\d+", message.contact.phone_number))
+    new_user(message.chat.id, message.chat.last_name, message.chat.first_name, phone, message.chat.username)
+    bot.send_message(message.chat.id, 'Вы зарегистрированы')
 
-    # bot.send_message(message.chat.id, write_member(phone, message.chat.id, message.chat.last_name,
-    #                  message.chat.first_name, message.chat.username), reply_markup=button_for_order_coupons())
+    
+
+
+
+
+
+
+
 
 # @bot.message_handler()
 # def user_commands(message):

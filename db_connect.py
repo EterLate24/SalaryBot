@@ -11,7 +11,12 @@ def connect_to_base():
                         password=password, host=host)
         cursor = conn.cursor()
         print("Successfully connected...")
-        return cursor
+        return conn, cursor
     except Exception as ex:
         print("Bad connection")
         print(ex)
+
+def close_connection(conn,cursor):
+    conn.close()
+    cursor.close()
+    print('Connection closed...')
