@@ -14,8 +14,18 @@ def start(message):
 @bot.message_handler(content_types="contact")
 def contact(message):
     phone = "".join(symbol for symbol in re.findall("\d+", message.contact.phone_number))
-    new_user(message.chat.id, message.chat.last_name, message.chat.first_name, phone, message.chat.username)
-    bot.send_message(message.chat.id, 'Вы зарегистрированы')
+    exist_check = new_user(message.chat.id, message.chat.last_name, message.chat.first_name, phone, message.chat.username)
+    if (exist_check == 1):
+        bot.send_message(message.chat.id, 'Вы зарегистрированы')
+    else:
+        bot.send_message(message.chat.id, 'Данные обновлены')
+
+@bot.message_handler(func=lambda m: True)
+def privet(m):
+    if (m.text == 'Привет'):
+        bot.send_message(m.chat.id, 'Привет, мое любимое солнышко!!!!!')
+    else:
+        bot.send_message(m.chat.id, 'Хуйня какая-то')
 
     
 
