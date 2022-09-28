@@ -3,19 +3,44 @@ from logging import exception
 import psycopg2
 from db_connect import *
 
+
+
 def new_user(chat_id, last_name, first_name, phone, nick_name):
+    try:
+        conn, cursor = connect_to_base()
+        cursor.execute("""INSERT INTO users (chat_id, lastname, firstname, phone, nickname, date_create) VALUES(%s, %s, %s, %s, %s, CURRENT_DATE)""", (chat_id, last_name, first_name, phone,nick_name))
+        conn.commit()
+        close_connection(conn, cursor)
+        print('user added') 
+        return 1
+    except: 
+        conn, cursor = connect_to_base()
+        cursor.execute("UPDATE users SET phone=%s, lastname=%s, firstname=%s, nickname=%s where chat_id=%s", 
+        (phone, last_name, first_name, nick_name, chat_id))
+        conn.commit()
+        close_connection(conn, cursor)
+        print('overwrite user')
+        return 0
+
+def change_salary(chat_id, salary):
     conn, cursor = connect_to_base()
-    # try:    # если запись есть, то выкидывает ошибку(или обновляет существующую запись)
-    #     query = "INSERT INTO users (chat_id, lastname, firstname, phone, nickname, date_create) " \
-    #               "VALUES(%s, %s, %s, %s, %s, CURRENT_DATE)"
-    #     cursor.execute(query, (chat_id, last_name, first_name, phone, nick_name))
-    #     close_connection(conn, cursor)
-    #     print('user added')
-    #     return 1
-    # except:     # ловит ошибку и обновляет запись в таблицу
-    query = "UPDATE users SET phone='%s', lastname='%s', firstname='%s', nickname='%s' where chat_id=%s" % (phone, last_name, first_name, nick_name, chat_id)
-    cursor.execute(query)
-    close_connection(conn, cursor)
-    print('overwrite user')
-    close_connection(conn, cursor)
-    return 0
+    try:
+        cursor.execute("UPDATE users SET salary=%s WHERE chat_id=%s",
+        (salary, chat_id))
+        conn.commit()
+        close_connection(conn, cursor)
+        return 1
+    except:
+        return 0
+
+
+def exist_check(chat_id):
+    conn, cursor = connect_to_base()
+    cursor.execute("SELECT * FROM users WHERE chat_id = %s", (chat_id,))
+    check = cursor.fetchall()
+    close_connection(conn,cursor)
+    if(len(check) == 0):
+        return 0
+    else:
+        return 1
+    
