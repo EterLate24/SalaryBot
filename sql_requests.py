@@ -33,6 +33,29 @@ def change_salary(chat_id, salary):
     except:
         return 0
 
+def enter_hours(chat_id, hours):
+    conn, cursor = connect_to_base()
+    cursor.execute("SELECT * FROM hours WHERE chat_id =%s AND date = CURRENT_DATE", (chat_id,))
+    date_select = cursor.fetchall()
+    print(date_select)
+
+    if(len(date_select)== 0):
+        conn, cursor = connect_to_base()
+        cursor.execute("INSERT INTO hours (chat_id, date, hours) VALUES (%s, CURRENT_DATE, %s)",
+        (chat_id, hours))
+        conn.commit()
+        close_connection(conn, cursor)
+
+        return 1
+    else:
+        conn, cursor = connect_to_base()
+        cursor.execute("UPDATE hours SET hours=%s where chat_id=%s and date=CURRENT_DATE",
+        (hours, chat_id))
+        conn.commit()
+        close_connection(conn, cursor)
+
+        return 0
+
 
 def exist_check(chat_id):
     conn, cursor = connect_to_base()

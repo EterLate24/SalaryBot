@@ -29,6 +29,9 @@ def main_listener(m):
     if(m.text == 'Изменить ставку в час'):
         msg = bot.send_message(m.chat.id, 'Введите ставку в час(только число):')
         bot.register_next_step_handler(msg, change_salary_step)
+    if(m.text == 'Ввести часы'):
+        msg = bot.send_message(m.chat.id, 'Введите часы за сегодня(максимум 8)')
+        bot.register_next_step_handler(msg, enter_hours_step)
 
 def change_salary_step(msg):
     chat_id = msg.chat.id
@@ -39,25 +42,21 @@ def change_salary_step(msg):
     else:
         bot.send_message(msg.chat.id, 'Данные введены неверно', reply_markup=main_buttons())
 
+def enter_hours_step(msg):
+    chat_id = msg.chat.id
+    hours = msg.text
+    try: 
+        hours = int(hours)
+        check = enter_hours(chat_id, hours)
+        if(check):
+            bot.send_message(msg.chat.id, 'Данные записаны')
+        else:
+            bot.send_message(msg.chat.id, 'Данные обновлены')
+    except:
+        bot.send_message(msg.chat.id, 'Данные введены неверно')
 
     
+    
 
-
-
-
-
-
-
-
-# @bot.message_handler()
-# def user_commands(message):
-#     if message.text == "Ввести часы":
-#         bot.send_message(message.chat.id, 'Ввести часы')
-#     elif message.text == "Посмотреть часы":
-#         bot.send_message(message.chat.id, 'Глянуть')
-#     elif message.text == "Регистрация":
-#         bot.send_message(message.chat.id, 'Глянуфыть')
-#     elif message.text == "Помощь":
-#         bot.send_message(message.chat.id, 'ыф')
 
 bot.polling(none_stop=True)
