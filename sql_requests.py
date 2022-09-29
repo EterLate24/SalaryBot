@@ -49,13 +49,19 @@ def enter_hours(chat_id, hours):
         return 1
     else:
         conn, cursor = connect_to_base()
-        cursor.execute("UPDATE hours SET hours=%s where chat_id=%s and date=CURRENT_DATE",
+        cursor.execute("UPDATE hours SET hours=%s where chat_id=%s AND date=CURRENT_DATE",
         (hours, chat_id))
         conn.commit()
         close_connection(conn, cursor)
 
         return 0
 
+def choose_interval(chat_id, current_date, date):
+    conn, cursor = connect_to_base()
+    cursor.execute("SELECT * FROM hours WHERE chat_id = %s AND date BETWEEN %s AND %s", (chat_id, date, current_date))
+    check = cursor.fetchall()
+    print(check)
+    close_connection(conn,cursor)
 
 def exist_check(chat_id):
     conn, cursor = connect_to_base()

@@ -4,6 +4,7 @@ import re
 from config import TOKEN
 from db_connect import *
 from sql_requests import *
+from datetime import *
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -26,12 +27,23 @@ def contact(message):
 
 @bot.message_handler(func=lambda m: True)
 def main_listener(m):
-    if(m.text == 'Изменить ставку в час'):
+    if (m.text == 'Изменить ставку в час'):
         msg = bot.send_message(m.chat.id, 'Введите ставку в час(только число):')
         bot.register_next_step_handler(msg, change_salary_step)
-    if(m.text == 'Ввести часы'):
+
+    elif (m.text == 'Ввести/изменить часы'):
         msg = bot.send_message(m.chat.id, 'Введите часы за сегодня(максимум 8)')
         bot.register_next_step_handler(msg, enter_hours_step)
+
+    elif (m.text == 'Посмотреть часы'):
+        msg = bot.send_message(m.chat.id, 'Выберите промежуток или введите дату вручную', reply_markup=choose_buttons())
+        bot.register_next_step_handler(msg, choose_interval_step)
+
+    elif (m.text == 'Помощь'):
+        bot.send_message(m.chat.id, 'Разработчик: @eterlate', reply_markup=main_buttons())
+
+    else:
+        bot.send_message(m.chat.id, 'Я Вас не понимаю', reply_markup=main_buttons())
 
 def change_salary_step(msg):
     chat_id = msg.chat.id
@@ -49,11 +61,26 @@ def enter_hours_step(msg):
         hours = int(hours)
         check = enter_hours(chat_id, hours)
         if(check):
-            bot.send_message(msg.chat.id, 'Данные записаны')
+            bot.send_message(msg.chat.id, 'Данные записаны', reply_markup=main_buttons())
         else:
-            bot.send_message(msg.chat.id, 'Данные обновлены')
+            bot.send_message(msg.chat.id, 'Данные обновлены', reply_markup=main_buttons())
     except:
-        bot.send_message(msg.chat.id, 'Данные введены неверно')
+        bot.send_message(msg.chat.id, 'Данные введены неверно', reply_markup=main_buttons())
+
+def choose_interval_step(msg):
+    current_date = datetime.now().date
+    minus_week_date = datetime.now() - timedelta(days=7)
+    minus_month_date = datetime.now() - timedelta(days=30)
+    if msg.text == 'Неделя':
+        choose_interval(msg.chat.id, current_date, minus_week_date)
+    if msg.text == 'Месяц':
+        choose_interval(msg.chat.id, current_date, minus_month_date)
+    else:
+        try:
+            bot.send_message(msg.chat.id, 'Ща')
+        except:
+            bot.send_message(msg.chat.id, 'Данные введены неверно')
+
 
     
     
