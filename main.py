@@ -68,13 +68,17 @@ def enter_hours_step(msg):
         bot.send_message(msg.chat.id, 'Данные введены неверно', reply_markup=main_buttons())
 
 def choose_interval_step(msg):
-    current_date = datetime.now().date
-    minus_week_date = datetime.now() - timedelta(days=7)
-    minus_month_date = datetime.now() - timedelta(days=30)
+    current_date = date.today()
+    print(current_date)
+    minus_week_date = current_date - timedelta(days=7)
+    minus_month_date = current_date - timedelta(days=30)
+    print(minus_week_date)
     if msg.text == 'Неделя':
         choose_interval(msg.chat.id, current_date, minus_week_date)
-    if msg.text == 'Месяц':
+    elif msg.text == 'Месяц':
         choose_interval(msg.chat.id, current_date, minus_month_date)
+    elif msg.text == 'Назад':
+        bot.send_message(msg.chat.id, 'Возвращаю...', reply_markup=main_buttons())
     else:
         try:
             bot.send_message(msg.chat.id, 'Ща')

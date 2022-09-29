@@ -59,9 +59,9 @@ def enter_hours(chat_id, hours):
 def choose_interval(chat_id, current_date, date):
     conn, cursor = connect_to_base()
     cursor.execute("SELECT * FROM hours WHERE chat_id = %s AND date BETWEEN %s AND %s", (chat_id, date, current_date))
-    check = cursor.fetchall()
-    print(check)
+    massiv = cursor.fetchall()
     close_connection(conn,cursor)
+    return massiv
 
 def exist_check(chat_id):
     conn, cursor = connect_to_base()

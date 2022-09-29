@@ -21,5 +21,6 @@ def choose_buttons():
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     week_key = types.KeyboardButton(text="Неделя")
     month_key = types.KeyboardButton(text="Месяц")
-    keyboard.add(week_key, month_key)
+    back_key = types.KeyboardButton(text="Назад")
+    keyboard.add(week_key, month_key, back_key)
     return keyboard
