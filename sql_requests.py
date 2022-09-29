@@ -58,18 +58,44 @@ def enter_hours(chat_id, hours):
 
 def choose_interval(chat_id, current_date, date):
     conn, cursor = connect_to_base()
-    cursor.execute("SELECT * FROM hours WHERE chat_id = %s AND date BETWEEN %s AND %s", (chat_id, date, current_date))
-    massiv = cursor.fetchall()
+    cursor.execute("SELECT * FROM hours WHERE chat_id = %s AND date BETWEEN %s AND %s AND paid = false", (chat_id, date, current_date))
+    result = cursor.fetchall()
     close_connection(conn,cursor)
-    return massiv
+    if result != None:
+        return result
+    else: 
+        return 0
+
+def user_salary(chat_id):
+    conn, cursor = connect_to_base()
+    cursor.execute("SELECT * FROM users WHERE chat_id = %s", (chat_id,))
+    result = cursor.fetchall()
+    close_connection(conn,cursor)
+    if result[0][6] != None:
+        return result[0][6]
+    else:
+        return 0
 
 def exist_check(chat_id):
     conn, cursor = connect_to_base()
     cursor.execute("SELECT * FROM users WHERE chat_id = %s", (chat_id,))
-    check = cursor.fetchall()
+    result = cursor.fetchall()
     close_connection(conn,cursor)
-    if(len(check) == 0):
+    if(len(result) == 0):
         return 0
     else:
         return 1
-    
+
+def check_admin(chat_id):
+    admin_id = 420159893
+    if chat_id == admin_id:
+        return 1
+    else:
+        return 0
+
+def users_list():
+    conn, cursor = connect_to_base()
+    cursor.execute("SELECT * FROM users")
+    result = cursor.fetchall()
+    close_connection(conn,cursor)
+    return result

@@ -7,7 +7,9 @@ def main_buttons():
     keyboard.row(order_key, coupons_key)
     cards_key = types.KeyboardButton(text="Изменить ставку в час")
     app_key = types.KeyboardButton(text="Помощь")
-    keyboard.add(cards_key, app_key)
+    keyboard.row(cards_key, app_key)
+    admin_key = types.KeyboardButton(text="Администратор")
+    keyboard.add(admin_key)
     return keyboard
 
 def reg_buttons():
@@ -15,6 +17,16 @@ def reg_buttons():
     agree_key = types.KeyboardButton(text="Да", request_contact=True)
     disagree_key = types.KeyboardButton(text="Нет")
     keyboard.add(agree_key, disagree_key)
+    return keyboard
+
+def admin_buttons():
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    view_user_hours = types.KeyboardButton(text='Посмотреть список пользователей')
+    keyboard.row(view_user_hours)
+    paid_user_hours = types.KeyboardButton(text='Отметить часы пользователя')
+    keyboard.row(paid_user_hours)
+    back_key = types.KeyboardButton(text="Назад")
+    keyboard.add(back_key)
     return keyboard
 
 def choose_buttons():
