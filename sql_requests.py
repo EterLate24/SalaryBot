@@ -99,3 +99,11 @@ def users_list():
     result = cursor.fetchall()
     close_connection(conn,cursor)
     return result
+
+def paid_salary(chat_id, date, current_date):
+    conn, cursor = connect_to_base()
+    cursor.execute("UPDATE hours SET paid=true WHERE chat_id=%s AND date BETWEEN %s AND %s", 
+    (chat_id, date, current_date))
+    conn.commit()
+    close_connection(conn, cursor)
+    return 1

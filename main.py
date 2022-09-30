@@ -91,9 +91,99 @@ def paid_user_hours_step(msg):
     m = bot.send_message(msg.chat.id, 'Выберите промежуток или введите дату вручную в формате(дд мм гггг)', reply_markup=choose_buttons())
     bot.register_next_step_handler(m, paid_user_hours_step1, user_chat_id)
 def paid_user_hours_step1(m, user_chat_id):
-    promej = m.text
-    print(user_chat_id)
-    print(promej)
+    current_date = date.today()
+    minus_week_date = current_date - timedelta(days=7)
+    minus_month_date = current_date - timedelta(days=30)
+    check_salary_exist = user_salary(user_chat_id)
+    if m.text == 'Неделя':
+        interval = choose_interval(user_chat_id, current_date, minus_week_date)
+        if interval:
+            total_salary = 0
+            message = ''
+            counter = 0
+            bot.send_message(m.chat.id, f'Неоплаченные часы пользователя - {user_chat_id} за интервал: с {minus_week_date} по {current_date}:')
+            
+            for el in interval:
+                if check_salary_exist != 0:
+                    total_salary = total_salary + (el[3] * check_salary_exist)
+                str_message = f'Дата: {el[2]} -- Часы: {el[3]}\n'
+                message = message + str_message
+                counter=counter+1
+                if counter > 7:
+                    bot.send_message(m.chat.id, message)
+                    counter = 0
+                    message = ''
+            if counter>0:
+                bot.send_message(m.chat.id, message)
+            if total_salary != 0:
+                bot.send_message(m.chat.id, f'Итого: {total_salary} руб.')
+            else:
+                bot.send_message(m.chat.id, 'Чтобы увидеть итоговую ЗП - пользователь должен ввести ставку в час')
+        else:
+            bot.send_message(m.chat.id, 'У пользователя нет неоплаченных часов')
+            
+    elif m.text == 'Месяц':
+        interval = choose_interval(user_chat_id, current_date, minus_month_date)
+        if interval:
+            message = ''
+            total_salary = 0
+            counter = 0
+            bot.send_message(m.chat.id, f'Неоплаченные часы пользователя - {user_chat_id} за интервал: с {minus_week_date} по {current_date}:')
+            for el in interval:
+                if check_salary_exist != 0:
+                    total_salary = total_salary + (el[3] * check_salary_exist)
+                str_message = f'Дата: {el[2]} -- Часы: {el[3]}\n'
+                message = message + str_message
+                counter=counter+1
+                if counter > 30:
+                    bot.send_message(m.chat.id, message)
+                    counter = 0
+                    message = ''
+            if(counter>0):
+                bot.send_message(m.chat.id, message)
+            if total_salary != 0:
+                bot.send_message(m.chat.id, f'Итого: {total_salary} руб.')
+            else:
+                bot.send_message(m.chat.id, 'Чтобы увидеть итоговую ЗП - пользователь должен ввести ставку в час')
+        else:
+            bot.send_message(m.chat.id, 'У пользователя нет неоплаченных часов')
+
+    elif m.text == 'Назад':
+        bot.send_message(m.chat.id, 'Возвращаю...', reply_markup=main_buttons())
+
+    else:
+        try:
+            user_date = m.text
+            minus_user_date = datetime.datetime.strptime(user_date, "%d %m %Y").date()
+            print(minus_user_date)
+            interval = choose_interval(user_chat_id, current_date, minus_user_date)
+            if interval:
+                message = ''
+                total_salary = 0
+                counter = 0
+                bot.send_message(m.chat.id, f'Неоплаченные часы пользователя - {user_chat_id} за интервал: с {minus_week_date} по {current_date}:')
+                for el in interval:
+                    if check_salary_exist != 0:
+                        total_salary = total_salary + (el[3] * check_salary_exist)
+                    str_message = f'Дата: {el[2]} -- Часы: {el[3]}\n'
+                    message = message + str_message
+                    counter=counter+1
+                    if counter > 50:
+                        bot.send_message(m.chat.id, message)
+                        counter = 0
+                        message = ''
+                if(counter>0):
+                    bot.send_message(m.chat.id, message)
+                if total_salary != 0:
+                    bot.send_message(m.chat.id, f'Итого: {total_salary} руб.')
+                else:
+                    bot.send_message(m.chat.id, 'Чтобы увидеть итоговую ЗП - пользователь должен ввести ставку в час')
+            else: 
+                bot.send_message(m.chat.id, 'У пользователя нет неоплаченных часов')
+        except:
+            bot.send_message(m.chat.id, 'Данные введены неверно')
+    bot.register_next_step_handler(m, paid_user_hours_step2,  )
+
 
 
 def change_salary_step(msg):
@@ -202,6 +292,10 @@ def choose_interval_step(msg):
                         message = ''
                 if(counter>0):
                     bot.send_message(msg.chat.id, message)
+                if total_salary != 0:
+                    bot.send_message(msg.chat.id, f'Итого: {total_salary} руб.')
+                else:
+                    bot.send_message(msg.chat.id, 'Чтобы увидеть итоговую ЗП - введите ставку в час')
             else: 
                 bot.send_message(msg.chat.id, 'У вас нет неоплаченных часов')
         except:

@@ -36,3 +36,10 @@ def choose_buttons():
     back_key = types.KeyboardButton(text="Назад")
     keyboard.add(week_key, month_key, back_key)
     return keyboard
+
+def pdai_salary():
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    week_key = types.KeyboardButton(text="Отметить выдачу")
+    back_key = types.KeyboardButton(text="Назад")
+    keyboard.add(week_key, back_key)
+    return keyboard
