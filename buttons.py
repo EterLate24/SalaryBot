@@ -37,9 +37,9 @@ def choose_buttons():
     keyboard.add(week_key, month_key, back_key)
     return keyboard
 
-def pdai_salary():
+def paid_salary():
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    week_key = types.KeyboardButton(text="Отметить выдачу")
+    paid_key = types.KeyboardButton(text="Да")
     back_key = types.KeyboardButton(text="Назад")
-    keyboard.add(week_key, back_key)
+    keyboard.add(paid_key, back_key)
     return keyboard

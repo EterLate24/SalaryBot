@@ -93,6 +93,17 @@ def check_admin(chat_id):
     else:
         return 0
 
+def non_paid_hours(chat_id):
+    conn, cursor = connect_to_base()
+    cursor.execute("SELECT * FROM hours WHERE chat_id = %s AND paid = false", 
+    (chat_id,))
+    result = cursor.fetchall()
+    close_connection(conn,cursor)
+    if result != None:
+        return result
+    else: 
+        return 0
+
 def users_list():
     conn, cursor = connect_to_base()
     cursor.execute("SELECT * FROM users")
@@ -100,10 +111,10 @@ def users_list():
     close_connection(conn,cursor)
     return result
 
-def paid_salary(chat_id, date, current_date):
+def admin_paid_salary(chat_id):
     conn, cursor = connect_to_base()
-    cursor.execute("UPDATE hours SET paid=true WHERE chat_id=%s AND date BETWEEN %s AND %s", 
-    (chat_id, date, current_date))
+    cursor.execute("UPDATE hours SET paid=true WHERE chat_id=%s", 
+    (chat_id,))
     conn.commit()
     close_connection(conn, cursor)
     return 1
