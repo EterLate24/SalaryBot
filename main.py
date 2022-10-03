@@ -253,4 +253,4 @@ def choose_interval_step(msg):
     
 
 
-bot.polling(none_stop=True)
+bot.infinity_polling()
