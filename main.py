@@ -15,6 +15,7 @@ bot = telebot.TeleBot(TOKEN)
 @bot.message_handler(commands=['start'])
 def start(message):
     check = exist_check(message.chat.id)
+    
     if(check):
         bot.send_message(message.chat.id, 'Здравствуйте ' + message.chat.first_name + '!', reply_markup=main_buttons())
     else: 
@@ -33,6 +34,11 @@ def contact(message):
 # ----------------------------messages listener
 @bot.message_handler(func=lambda m: True)
 def main_listener(m):
+    check = exist_check(m.chat.id)
+    if m.text == 'Нет' or not check:
+        bot.send_message(m.chat.id, 'Для доступа к функциям бота нужен ваш номер телефона, вы согласны?', reply_markup=reg_buttons())
+        bot.send_sticker(m.chat.id, 'CAACAgIAAxkBAAEGEHpjRlqJPDoTxhpIJ8aSjBxsenJxMgACEhwAAswJEEtts4cKgSepdSoE')
+        return
     if (m.text == 'Ввести/изменить ставку в час'):
         salary = user_salary(m.chat.id)
         if salary:
@@ -54,6 +60,8 @@ def main_listener(m):
     elif (m.text == 'Помощь'):
         bot.send_message(m.chat.id, 'Разработчик: @eterlate(не без помощи @Whatislove567)', reply_markup=main_buttons())
         bot.send_sticker(m.chat.id, 'CAACAgIAAxkBAAEGDydjRUnq5cUiCd1BjpbamSzNQAx4XwAC3B0AAprNEUsrR7FdRJuV5ioE')
+
+    
 
 # -------------------admin messages
     elif (m.text == 'Посмотреть список пользователей'):
