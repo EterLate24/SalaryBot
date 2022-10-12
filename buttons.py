@@ -1,11 +1,17 @@
 from telebot import types
 
+def back_button():
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    back_key = types.KeyboardButton(text="Назад")
+    keyboard.add(back_key)
+    return keyboard
+
 def main_buttons():
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     order_key = types.KeyboardButton(text="Ввести/изменить часы")
     coupons_key = types.KeyboardButton(text="Посмотреть часы")
     keyboard.row(order_key, coupons_key)
-    cards_key = types.KeyboardButton(text="Изменить ставку в час")
+    cards_key = types.KeyboardButton(text="Ввести/изменить ставку в час")
     app_key = types.KeyboardButton(text="Помощь")
     keyboard.row(cards_key, app_key)
     admin_key = types.KeyboardButton(text="Администратор")

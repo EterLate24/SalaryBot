@@ -24,23 +24,27 @@ def new_user(chat_id, last_name, first_name, phone, nick_name):
 
 def change_salary(chat_id, salary):
     conn, cursor = connect_to_base()
-    try:
+    cursor.execute("SELECT * FROM users WHERE chat_id =%s AND salary = %s", (chat_id, salary))
+    date_select = cursor.fetchall()
+    if len(date_select) == 0:
         cursor.execute("UPDATE users SET salary=%s WHERE chat_id=%s",
         (salary, chat_id))
         conn.commit()
         close_connection(conn, cursor)
         return 1
-    except:
+    else:
+        cursor.execute("UPDATE users SET salary=%s WHERE chat_id=%s",
+        (salary, chat_id))
+        conn.commit()
+        close_connection(conn, cursor)
         return 0
 
 def enter_hours(chat_id, hours):
     conn, cursor = connect_to_base()
     cursor.execute("SELECT * FROM hours WHERE chat_id =%s AND date = CURRENT_DATE", (chat_id,))
     date_select = cursor.fetchall()
-    print(date_select)
 
     if(len(date_select)== 0):
-        conn, cursor = connect_to_base()
         cursor.execute("INSERT INTO hours (chat_id, date, hours) VALUES (%s, CURRENT_DATE, %s)",
         (chat_id, hours))
         conn.commit()
@@ -48,7 +52,6 @@ def enter_hours(chat_id, hours):
 
         return 1
     else:
-        conn, cursor = connect_to_base()
         cursor.execute("UPDATE hours SET hours=%s where chat_id=%s AND date=CURRENT_DATE",
         (hours, chat_id))
         conn.commit()
@@ -58,7 +61,7 @@ def enter_hours(chat_id, hours):
 
 def choose_interval(chat_id, current_date, date):
     conn, cursor = connect_to_base()
-    cursor.execute("SELECT * FROM hours WHERE chat_id = %s AND date BETWEEN %s AND %s AND paid = false", (chat_id, date, current_date))
+    cursor.execute("SELECT * FROM hours WHERE chat_id = %s AND date BETWEEN %s AND %s", (chat_id, date, current_date))
     result = cursor.fetchall()
     close_connection(conn,cursor)
     if result != None:
@@ -87,7 +90,7 @@ def exist_check(chat_id):
         return 1
 
 def check_admin(chat_id):
-    admin_id = 272568
+    admin_id = 420159893
     if chat_id == admin_id:
         return 1
     else:
