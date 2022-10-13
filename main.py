@@ -37,7 +37,6 @@ def main_listener(m):
     check = exist_check(m.chat.id)
     if m.text == 'Нет' or not check:
         bot.send_message(m.chat.id, 'Для доступа к функциям бота нужен ваш номер телефона, вы согласны?', reply_markup=reg_buttons())
-        bot.send_sticker(m.chat.id, 'CAACAgIAAxkBAAEGEHpjRlqJPDoTxhpIJ8aSjBxsenJxMgACEhwAAswJEEtts4cKgSepdSoE')
         return
     if (m.text == 'Ввести/изменить ставку в час'):
         salary = user_salary(m.chat.id)

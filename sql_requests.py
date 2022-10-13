@@ -90,7 +90,7 @@ def exist_check(chat_id):
         return 1
 
 def check_admin(chat_id):
-    admin_id = 420159893
+    admin_id = 272568
     if chat_id == admin_id:
         return 1
     else:
