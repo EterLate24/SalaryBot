@@ -1,6 +1,5 @@
 from distutils.log import error
 from logging import exception
-import psycopg2
 from db_connect import *
 
 
@@ -90,7 +89,7 @@ def exist_check(chat_id):
         return 1
 
 def check_admin(chat_id):
-    admin_id = 272568
+    admin_id = 420159893
     if chat_id == admin_id:
         return 1
     else:

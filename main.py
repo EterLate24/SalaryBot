@@ -57,7 +57,10 @@ def main_listener(m):
         bot.register_next_step_handler(msg, choose_interval_step)
 
     elif (m.text == 'Помощь'):
-        bot.send_message(m.chat.id, 'Разработчик: @eterlate(не без помощи @Whatislove567)', reply_markup=main_buttons())
+        markup = types.InlineKeyboardMarkup()
+        github = types.InlineKeyboardButton("GitHub", url='https://github.com/EterLate24')
+        markup.add(github)
+        bot.send_message(m.chat.id, 'Разработчик: @eterlate(не без помощи @Whatislove567)', reply_markup=markup)
         bot.send_sticker(m.chat.id, 'CAACAgIAAxkBAAEGDydjRUnq5cUiCd1BjpbamSzNQAx4XwAC3B0AAprNEUsrR7FdRJuV5ioE')
 
     
@@ -311,7 +314,6 @@ def choose_interval_step(msg):
 
 
     
-    
+bot.infinity_polling(long_polling_timeout = 5)
 
 
-bot.infinity_polling()
